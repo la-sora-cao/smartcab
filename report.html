@@ -16735,12 +16735,16 @@ gGVmZmZmZlYn/w/blojtZR8j2gAAAABJRU5ErkJggg==
 <p><strong>Answer:</strong></p>
 <ul>
 <li>(right, green, ?, ?, ?) -&gt; right</li>
-<li>(forward, green, ?, ?, ?) -&gt; forward  </li>
+<li>(forward, green, ?, ?, ?) -&gt; forward</li>
+<li>(left, green, ?, ?, left/None) -&gt; left</li>
+<li>(left, green, ?, ?, right/forward) -&gt; None</li>
 <li>(right, red, forward, ?, ?) -&gt; None   </li>
-<li>(right, red, NOT forward, ?, ?) -&gt; right  </li>
+<li>(right, red, NOT forward, ?, ?) -&gt; right</li>
+<li>(left/forward, red, ?, ?, ?)-&gt; None</li>
 </ul>
 <p>For example:</p>
 <ul>
+<li>Line 2285</li>
 <li>('right', 'green', 'forward', 'right', None)<ul>
 <li>-- forward : 0.52</li>
 <li>-- right : 1.51</li>
@@ -16750,8 +16754,9 @@ gGVmZmZmZlYn/w/blojtZR8j2gAAAABJRU5ErkJggg==
 </li>
 <li><p>It is corresponding with the optimal policy.*</p>
 </li>
-<li><p>('forward', 'green', 'left', 'left', 'left')</p>
-<ul>
+<li><p>Line 2243</p>
+</li>
+<li>('forward', 'green', 'left', 'left', 'left')<ul>
 <li>-- forward : 1.85</li>
 <li>-- right : 1.14</li>
 <li>-- None : 0.96</li>
@@ -16760,15 +16765,27 @@ gGVmZmZmZlYn/w/blojtZR8j2gAAAABJRU5ErkJggg==
 </li>
 <li><p>It is corresponding with the optimal policy as well.*</p>
 </li>
-<li><p>('right', 'green', 'left', 'right', 'right')</p>
-<ul>
+<li><p>Line 2273</p>
+</li>
+<li>('right', 'green', 'left', 'right', 'right')<ul>
 <li>-- forward : 0.71</li>
 <li>-- right : 0.67</li>
 <li>-- None : 0.07</li>
 <li>-- left : 0.00</li>
 </ul>
 </li>
-<li>The smartcab goes forward instead of right, which is not the best policy.</li>
+<li><p>The smartcab goes forward instead of right, which is sub-optimal</p>
+</li>
+<li><p>Line 1763</p>
+</li>
+<li>('forward', 'green', 'left', 'right', 'left')<ul>
+<li>-- forward : 0.00</li>
+<li>-- right : 0.46</li>
+<li>-- None : 0.60</li>
+<li>-- left : 0.00</li>
+</ul>
+</li>
+<li>The smartcab should go straight instead of keeping idle, which is sub-optimal.</li>
 </ul>
 <p>For the first example, the smartcab intends to go right, and the traffic light is green.Cars from oncoming stay idle, which will make no influence to our dicision.Obviously, going right is the correct policy.</p>
 
@@ -16803,8 +16820,11 @@ gGVmZmZmZlYn/w/blojtZR8j2gAAAABJRU5ErkJggg==
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
 <ul>
-<li>For smartcab itself, Future rewards may make affection to the smartcab to make the correct decision about how to drive.It may cause accidents if it makes the wrong decision in order to arrive the desitionation on time, which should be avoided. </li>
-<li>For the environments, the related factors is too much. We simplify the model with only 5 features, however, in reality, there should be much more features to pay attention to.This is why it is diffucult to relate the current state with the future state.</li>
+<li>For smartcab itself, Future rewards may make affection to the smartcab to make the correct decision about how to drive.For safety, it should be rewarded while not punished if it drive away from the destination during one decision, but it is hard to decide if the reward should be given in each movement.On the other hand, if it earned future reward when it is closer to the destination for one movement, it may cause accidents in order to arrive the desitionation on time and for more rewards, which should be avoided.This future reward bring negative affection to the Q-Learning algorithm.</li>
+<li><p>For the environments, the related factors is too much. We simplify the model with only 5 features, however, in reality, there should be much more features to pay attention to.This is why it is diffucult to relate the current state with the future state.Furthermore, we did not compute the distance to the destionation after each movement, so we did not know whether the smartcab is further or closer to the destination, which caused that it is difficult decide whether to reward or punish the smartcab for the next movement.</p>
+</li>
+<li><p>In conclusion, future reward will not work for this project.</p>
+</li>
 </ul>
 
 </div>
