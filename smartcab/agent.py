@@ -95,11 +95,8 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-        if state not in self.Q:
-            state_dict= {}
-            for action in self.valid_actions:
-                state_dict[action] = 0.
-            self.Q[state] = state_dict
+        if self.learning:
+            self.Q[state] = self.Q.get(state, {None: 0.0, 'forward': 0.0, 'left': 0.0, 'right': 0.0})
             
         return
 
@@ -126,13 +123,9 @@ class LearningAgent(Agent):
             if self.epsilon > random.random():
                 action = random.choice(self.valid_actions)
             else:
-                action = None
                 maxQ = self.get_maxQ(state)
-                maxQ_actions = []
-                for act in self.valid_actions:
-                    if self.Q[state][act] == maxQ:
-                        maxQ_actions.append(act)
-                action = random.choice(maxQ_actions)
+best_actions = [action for action in self.valid_actions if self.Q[state][action] == maxQ]
+action = random.choice(best_actions)
     
         return action
 
